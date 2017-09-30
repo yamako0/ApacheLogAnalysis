@@ -1,0 +1,17 @@
+.nav-tabs.navbar-inverse>.active>a,
+.nav-tabs.navbar-inverse>.active>a:focus {
+	background: #bdbdbd;
+}
+
+body {
+	background-color: white;
+}
+
+.t-text{
+    text-align: center;
+	width: 125px;
+}
+
+.left {
+
+}
