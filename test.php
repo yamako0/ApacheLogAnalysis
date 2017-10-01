@@ -68,10 +68,13 @@
         }
     }
     arsort($array['remoteHost']);
-    print_r($array['remoteHost']);
-    print_r($array['timeZone']);
-    foreach ($array['remoteHost'] as $key => $value) {
-        echo $key;
-        echo $value;
-    }
+    // print_r($array['remoteHost']);
+    // print_r($array['timeZone']);
+    // foreach ($array['remoteHost'] as $key => $value) {
+    //     echo $key;
+    //     echo $value;
+    // }
+    echo "<br>".date("Y/m/d", strtotime("31/12/2016"))."<br>";
+    echo strtotime("2016/12/31")."<br>";
+    echo strtotime("1970/1/1")."<br>";
 ?>
