@@ -33,7 +33,6 @@
 						</button>
 					<a class="navbar-brand" href="http://localhost/php/ApacheLogAnalysis/">Apacheログ解析</a>
 				</div>
-
 				<div class="collapse navbar-collapse target">
 					<ul class="nav navbar-nav">
 					</ul>
@@ -42,10 +41,10 @@
 				</div>
 			</nav>
 			<?php
-				$logAnalyser = new LogAnalyser();
+				$logAnalyzer = new LogAnalyzer();
 				$begin = $_GET['begin-Y'].'/'.$_GET['begin-M'].'/'.$_GET['begin-D'];
 				$end = $_GET['end-Y'].'/'.$_GET['end-M'].'/'.$_GET['end-D'];
-				$array = $logAnalyser->analysis($begin, $end);
+				$array = $logAnalyzer->analyze($begin, $end);
 			?>
 			<div class="row" style="padding-right: 30px; padding-left: 30px">
 				<p>
@@ -55,135 +54,125 @@
 					?>
 				</p>
 			</div>
-				<div class="row" style="padding-right: 30px; padding-left: 30px">
-					<p>
-						各時間帯毎のアクセス数
-						<table class="table table-hover text-center table-bordered" style="width: 500px">
-							<thead class="text-center">
-								<tr>
-									<th class="t-text">0-6</th>
-									<th class="t-text">6-12</th>
-									<th class="t-text">12-18</th>
-									<th class="t-text">18-24</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<?php echo $array['timeZone']['0-6'] ?>
-									</td>
-									<td>
-										<?php echo $array['timeZone']['6-12'] ?>
-									</td>
-									<td>
-										<?php echo $array['timeZone']['12-18'] ?>
-									</td>
-									<td>
-										<?php echo $array['timeZone']['18-24'] ?>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</p>
-				</div>
-				<div class="row" style="padding-right: 30px; padding-left: 30px">
-					<p>
-						リモートホスト別のアクセス件数
-						<table class="table table-hover text-center table-striped table-bordered" style="width: 500px">
-							<thead class="text-center">
-								<tr>
-									<th style="width: 30px; text-align: center">#</th>
-									<th class="t-text">リモートホスト</th>
-									<th class="t-text">件数</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-									$cnt = 1;
-									foreach ($array['remoteHost'] as $key => $value) {
-								echo "<tr>";
+			<div class="row" style="padding-right: 30px; padding-left: 30px">
+				<p>
+					各時間帯毎のアクセス数
+					<table class="table table-hover text-center table-bordered" style="width: 500px">
+						<thead class="text-center">
+							<tr>
+								<th class="t-text">0-6</th>
+								<th class="t-text">6-12</th>
+								<th class="t-text">12-18</th>
+								<th class="t-text">18-24</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?php echo $array['timeZone']['0-6'] ?></td>
+								<td><?php echo $array['timeZone']['6-12'] ?></td>
+								<td><?php echo $array['timeZone']['12-18'] ?></td>
+								<td><?php echo $array['timeZone']['18-24'] ?></td>
+							</tr>
+						</tbody>
+					</table>
+				</p>
+			</div>
+			<div class="row" style="padding-right: 30px; padding-left: 30px">
+				<p>
+					リモートホスト別のアクセス件数
+					<table class="table table-hover text-center table-striped table-bordered" style="width: 500px">
+						<thead class="text-center">
+							<tr>
+								<th style="width: 30px; text-align: center">#</th>
+								<th class="t-text">リモートホスト</th>
+								<th class="t-text">件数</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+								$cnt = 1;
+								foreach ($array['remoteHost'] as $key => $value) {
+									echo "<tr>";
 									echo "<td>".$cnt."</td>";
 									echo "<td>".$key."</td>";
 									echo "<td>".$value."</td>";
 									echo "</tr>";
 									$cnt++;
 								}
+							?>
+						</tbody>
+					</table>
+				</p>
+			</div>
+			<div class="row" style="padding-right: 30px; padding-left: 30px">
+				<form class="form-horizontal" action="#" method="get">
+					<div class="form-inline">
+						<div class="form-group" style="width: 150px">
+							<select class="form-control" name="begin-Y" style="width: 100px">
+								<?php
+									for ($i = 1970; $i <= date("Y", strtotime("now")); $i++) {
+										echo "<option>".$i."</option>\n";
+									}
 								?>
-							</tbody>
-						</table>
-					</p>
-				</div>
-				<div class="row" style="padding-right: 30px; padding-left: 30px">
-					<form class="form-horizontal" action="#" method="get">
-						<div class="form-inline">
-								<div class="form-group" style="width: 150px">
-									<select class="form-control" name="begin-Y" style="width: 100px">
-										<?php
-											for($i = 1970; $i <= date("Y", strtotime("now")); $i++ ) {
-												echo "<option>".$i."</option>\n";
-											}
-										?>
-									</select>
-									<label>年</label>
-								</div>
-								<div class="form-group" style="width: 150px">
-									<select class="form-control" name="begin-M" style="width: 100px">
-										<?php
-											for($i = 1; $i <= 12; $i++ ) {
-												echo "<option>".$i."</option>\n";
-											}
-										?>
-									</select>
-									<label>月</label>
-								</div>
-								<div class="form-group" style="width: 175px">
-									<select class="form-control" name="begin-D" style="width: 100px">
-										<?php
-											for($i = 1; $i <= 31; $i++ ) {
-												echo "<option>".$i."</option>\n";
-											}
-										?>
-									</select>
-									<label>日から</label>
-								</div>
-								<div class="form-group" style="width: 150px">
-									<select class="form-control" name="end-Y" style="width: 100px">
-										<?php
-											for($i = 1970; $i <= date("Y", strtotime("now")); $i++ ) {
-												echo "<option>".$i."</option>\n";
-											}
-										?>
-									</select>
-									<label>年</label>
-								</div>
-								<div class="form-group" style="width: 150px">
-									<select class="form-control" name="end-M" style="width: 100px">
-										<?php
-											for($i = 1; $i <= 12; $i++ ) {
-												echo "<option>".$i."</option>\n";
-											}
-										?>
-									</select>
-									<label>月</label>
-								</div>
-								<div class="form-group" style="width: 165px">
-									<select class="form-control" name="end-D" style="width: 100px">
-										<?php
-											for($i = 1; $i <= 31; $i++ ) {
-												echo "<option>".$i."</option>\n";
-											}
-										?>
-									</select>
-									<label>日で</label>
-								</div>
-								<div class="form-group">
-									<button class="btn btn-primary" type="submit">絞り込み</button>
-								</div>
-							<label>
-							</label>
+							</select>
+							<label>年</label>
 						</div>
-					</form>
-				</div>
+						<div class="form-group" style="width: 150px">
+							<select class="form-control" name="begin-M" style="width: 100px">
+								<?php
+									for ($i = 1; $i <= 12; $i++) {
+										echo "<option>".$i."</option>\n";
+									}
+								?>
+							</select>
+							<label>月</label>
+						</div>
+						<div class="form-group" style="width: 175px">
+							<select class="form-control" name="begin-D" style="width: 100px">
+								<?php
+									for ($i = 1; $i <= 31; $i++) {
+										echo "<option>".$i."</option>\n";
+									}
+								?>
+							</select>
+							<label>日から</label>
+						</div>
+						<div class="form-group" style="width: 150px">
+							<select class="form-control" name="end-Y" style="width: 100px">
+								<?php
+									for ($i = 1970; $i <= date("Y", strtotime("now")); $i++) {
+										echo "<option>".$i."</option>\n";
+									}
+								?>
+							</select>
+							<label>年</label>
+						</div>
+						<div class="form-group" style="width: 150px">
+							<select class="form-control" name="end-M" style="width: 100px">
+								<?php
+								for ($i = 1; $i <= 12; $i++) {
+									echo "<option>".$i."</option>\n";
+								}
+							?>
+							</select>
+							<label>月</label>
+						</div>
+						<div class="form-group" style="width: 165px">
+							<select class="form-control" name="end-D" style="width: 100px">
+								<?php
+									for ($i = 1; $i <= 31; $i++) {
+										echo "<option>".$i."</option>\n";
+									}
+								?>
+							</select>
+							<label>日で</label>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-primary" type="submit">絞り込み</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 </body>

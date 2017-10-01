@@ -1,12 +1,18 @@
 <?php
     /**
+     * [LogAnalyzer description]
+     *
+     * Apacheのログ分析を行うクラス
      *
      */
-    class LogAnalyser
+    class LogAnalyzer
     {
 
         private $array;
 
+        /**
+         * [__construct description]
+         */
         public function __construct()
         {
             $this->array = array(
@@ -15,39 +21,35 @@
             );
         }
 
-        public function analysis($begin = '', $end = '')
+        /**
+         * [analyze description]
+         *
+         * 期間指定時は絞り込み、指定しなければすべてのログから分析
+         *
+         * @param  string $begin [絞り込み期間のスタート]
+         * @param  string $end   [絞り込み期間の終わり]
+         * @return array  $array [分析結果（'remoteHost','timeZone'）]
+         * @see    LogAnalyzer::countRemoteHostAndTimeZone
+         */
+        public function analyze($begin = '', $end = '')
         {
-            $logfile = './logs/access.log';
+            // $logfile = './logs/access.log';
             $refine = ($begin != '' && $end != '');
-            // echo $refine ? "true" : "false";
-            // $this->array = array(
-            //     'remoteHost' => array(),
-            //     'timeZone' => array("0-6" => 0, "6-12" => 0, "12-18" => 0, "18-24" => 0)
-            // );
-            // echo "begin = ".$begin."<br>";
-            // echo "end = ".$end."<br>";
-            // echo "refine = ";
-            // echo $refine ? "true" : "false";
-            // echo "<br>";
             $begin = strtotime($begin);
             $end = strtotime($end);
-            // echo "begin = ".$begin."<br>";
-            // echo "end = ".$end."<br>";
 
             if ($handle = opendir('./logs/')) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file == '.' || $file == '..') {
-                        // 「.」「..」は無視
                         continue;
                     }
                     if (preg_match('/.(log)$/', $file)) {
                         $files[] = $file;
-                        // echo $file."<br>";
                     }
                 }
                 closedir($handle);
             } else {
-                echo("ディレクトリのオープンに失敗");
+                echo "ディレクトリのオープンに失敗<br>";
             }
 
             foreach ($files as $value) {
@@ -57,11 +59,7 @@
                     while (strlen($str = fgets($fp)) != 0) {
                         $info = explode(",", preg_replace('/^(.+?)\s(.+?)\s(.+?)\s\[(.+)\]\s\"(.+?)\"\s(.+?)\s(.+?)\s\"(.+?)\"(.+)/', "$1,$2,$3,$4,$5,$6,$7,$8,$9", $str));
                         $timeStamp = strtotime($info[3]);
-                        // var_dump($info);
-                        // echo "<br>";
-                        // echo $access;
                         $time = intval(date("H", strtotime($info[3])));
-                        // echo "<br>".$time;
 
                         if ($refine) {
                             if ($timeStamp > $begin && $timeStamp < $end) {
@@ -70,24 +68,23 @@
                         } else {
                             $this->countRemoteHostAndTimeZone($info[0], $time);
                         }
-
-
-                        //　print_r($arrayRemoteHost);
-                        // echo "<hr>";
                     }
                     fclose($fp);
                 }
             }
             arsort($this->array['remoteHost']);
-            // print_r($array['remoteHost']);
-            // print_r($array['timeZone']);
-            // foreach ($array['remoteHost'] as $key => $value) {
-            //     echo $key;
-            //     echo $value;
-            // }
             return $this->array;
         }
 
+        /**
+         * [countRemoteHostAndTimeZone description]
+         *
+         * リモートホスト別、時間帯別にアクセス件数をカウント
+         *
+         * @param  string $remoteHost [リモートホスト]
+         * @param  int    $time       [時間（hour）]
+         * @return none
+         */
         private function countRemoteHostAndTimeZone($remoteHost, $time)
         {
             if (empty($this->array['remoteHost'][$remoteHost])) {
