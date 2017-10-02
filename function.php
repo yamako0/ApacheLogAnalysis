@@ -50,6 +50,7 @@
                 closedir($handle);
             } else {
                 echo "ディレクトリのオープンに失敗<br>";
+                return;
             }
 
             foreach ($files as $value) {
