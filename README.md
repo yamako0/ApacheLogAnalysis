@@ -4,25 +4,30 @@
 Apacheのアクセスログをリモートホスト別・時間帯別に集計及び表示、  
 また、指定した期間内でのリモートホスト別・時間帯別に集計及び表示を行う  
 
+## 使用方法
+index.htmlにアクセスすることで勝手に集計が始まります。  
+また、ページ下部のフォームで期間を入力し"絞り込み"ボタンを押すことで  
+指定した期間内での集計を行います。
+
 ## 使用言語等
-- HTML
-- CSS
-- PHP
-- Bootstrap
+- HTML  
+- CSS  
+- PHP  
+- Bootstrap  
 
 ## 動作確認
 windows 10  
-Firefox 56.0
-PHP 5.6.8
-Apache 2.4.12
+Firefox 56.0  
+PHP 5.6.8  
+Apache 2.4.12  
 
 ## 構成
-root\
- ├ logs\
- ├ index.html
- ├ function.php
- ├ refine.php
- └ stylesheet.css
+root\  
+ ├ logs\  
+ ├ index.html  
+ ├ function.php  
+ ├ refine.php  
+ └ stylesheet.css  
 
 ## 各問について
 
@@ -49,10 +54,10 @@ Fatal error: Maximum execution time
 ```
 max_execution_time=30
 ```
-の"30"を多めに設定しXAMPP等を再起動してからindex.htmlにアクセスしてください。
-ちなみに私の環境
+の"30"を多めに設定しXAMPP等を再起動してからindex.htmlにアクセスしてください。  
+ちなみに私の環境  
 - windows 10 x64
 - CPU: intel(R) Core(TM) i7-4770 @ 3.4GHz
 - メモリ: 8GB
-で、12GBほどのダミーのログを用意して動作確認しました。
-処理を終えるまで15~20分ほどかかりましたが、メモリ不足・クラッシュ等は起こりませんでした。
+で、12GBほどのダミーのログを用意して動作確認しました。  
+処理を終えるまで15~20分ほどかかりましたが、メモリ不足・クラッシュ等は起こりませんでした。  
